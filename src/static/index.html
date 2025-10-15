@@ -46,5 +46,63 @@
     </footer>
 
     <script src="app.js"></script>
+    <script>
+      async function loadActivities() {
+        const res = await fetch('/activities');
+        const activities = await res.json();
+        const container = document.getElementById('activities-container');
+        container.innerHTML = '';
+        for (const [name, info] of Object.entries(activities)) {
+          const card = document.createElement('div');
+          card.className = 'activity-card';
+          card.innerHTML = `
+            <h2>${name}</h2>
+            <p><strong>Description:</strong> ${info.description}</p>
+            <p><strong>Schedule:</strong> ${info.schedule}</p>
+            <p><strong>Max Participants:</strong> ${info.max_participants}</p>
+            <div class="participants-section">
+              <strong>Participants:</strong>
+              <ul class="participants-list">
+                ${info.participants.map(p => `<li>${p}</li>`).join('')}
+              </ul>
+            </div>
+          `;
+          container.appendChild(card);
+        }
+      }
+      loadActivities();
+    </script>
+    <style>
+      .activity-card {
+        box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        border-radius: 8px;
+        padding: 1.5em;
+        margin-bottom: 2em;
+        background: #fff;
+      }
+      .participants-section {
+        margin-top: 1em;
+        background: #f9f9fc;
+        padding: 0.75em 1em;
+        border-radius: 6px;
+        border-left: 4px solid #4f8cff;
+      }
+      .participants-section strong {
+        display: block;
+        margin-bottom: 0.5em;
+        color: #4f8cff;
+        font-size: 1.05em;
+      }
+      .participants-list {
+        margin: 0;
+        padding-left: 1.2em;
+        color: #333;
+      }
+      .participants-list li {
+        margin-bottom: 0.2em;
+        font-size: 0.97em;
+        list-style-type: disc;
+      }
+    </style>
   </body>
 </html>
